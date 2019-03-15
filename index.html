@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>song_generator</title>
+        <link rel="stylesheet" href="main.css">
+        <script src="main.js"></script>
+        <script src='node_modules/@hpcc-js/util/dist/index.js'></script>
+        <script src='node_modules/@hpcc-js/common/dist/index.js'></script>
+        <script src='node_modules/@hpcc-js/api/dist/index.js'></script>
+        <script src='node_modules/@hpcc-js/tree/dist/index.js'></script>
+        <script>
+            window.hpccjs = Object.keys(window).filter(n=>n.indexOf('@hpcc-js/')===0).reduce((o,n)=>{o[n.split('/')[1]]=window[n];return o;},{});
+        </script>
+        <script src='DATA.js'></script>
+        <script src='TRANSFORM.js'></script>
+    </head>
+    <body>
+        <script>
+            window.g_data = [];
+            window.g_first_lyric;
+            fetchData(
+                [
+                    "data/phrase_data.json",
+                    "data/syllable_data.json",
+                    "data/rhyme_data.json"
+                ],
+                data => {
+                    g_data = data;
+                    g_first_lyric = Object.keys(data[3])[Math.floor(Math.random() * Object.keys(data[3]).length)];
+                    console.group("data loaded:");
+                    console.log("phrases:", data[0].length);
+                    console.log("syllable words:", Object.keys(data[1]).length);
+                    console.log("rhyme words:", Object.keys(data[2]).length);
+                    console.log("phrases of known syllable words:", Object.keys(data[3]).length);
+                    console.groupEnd();
+                    const flat = generateFlatLyrics(
+                        data,
+                        [
+                            {syllables: 5, rhymesWithPreviousLastWord: true},
+                            {syllables: 5, rhymesWithPreviousLastWord: false},
+                            {syllables: 5, rhymesWithPreviousLastWord: true},
+                        ]
+                    );
+                    console.log('flat:',flat);
+                }
+            );    
+        </script>
+    </body>
+</html>

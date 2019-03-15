@@ -1,0 +1,6 @@
+{
+    "dependencies": {
+        "express": "^4.16.4",
+        "@hpcc-js/tree": "^2.3.2"
+    }
+}
